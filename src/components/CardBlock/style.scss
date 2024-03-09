@@ -1,0 +1,30 @@
+.card {
+  margin-bottom: 15px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__inner {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+  }
+
+  &__avatar {
+    margin-right: 10px;
+  }
+
+  &__friend {
+    margin-left: auto;
+    position: relative;
+
+    &-list {
+      position: absolute;
+      right: 0;
+      z-index: 2;
+      top: 100%;
+      margin-top: 10px;
+    }
+  }
+}

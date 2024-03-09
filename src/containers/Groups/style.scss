@@ -1,0 +1,11 @@
+.groups {
+  &__head {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 30px;
+
+    &-btns {
+      margin-left: auto;
+    }
+  }
+}
