@@ -15,11 +15,8 @@ export const Select: React.FC<SelectProps> = ({
 }) => {
   let renderData = Object.entries(data);
 
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    let key: string = event.target.value;
-
-    onChangeCallback(key);
-  };
+  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    onChangeCallback(event.target.value);
 
   return (
     <FormItem top={labelText} htmlFor="select-id" style={{ padding: `0 16px` }}>
@@ -29,7 +26,7 @@ export const Select: React.FC<SelectProps> = ({
         onChange={handleChange}
         value={selectedItem}
       >
-        {renderData?.map(([key, title]: any, index) => (
+        {renderData?.map(([key, title]: [string, string | any], index) => (
           <option value={key} key={index}>
             {title}
           </option>

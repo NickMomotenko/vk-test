@@ -1,9 +1,13 @@
+import { useRef, useState } from "react";
+
 import { Card, Avatar, Title, Text, Button } from "@vkontakte/vkui";
 
-import "./style.scss";
 import { Group } from "../../types/types";
-import { useState } from "react";
+
 import { FriendsList } from "../FriendsList";
+import { useClickOutside } from "../../hooks/useClickOutside";
+
+import "./style.scss";
 
 export const CardBlock: React.FC<Group> = ({
   avatar_color,
@@ -15,12 +19,16 @@ export const CardBlock: React.FC<Group> = ({
   const [isFriendsListActive, setIsFriendsListActive] =
     useState<boolean>(false);
 
+  const friendsListRef = useRef<HTMLDivElement>(null);
+
   let isClosedGroup = !closed ? "открытая" : "закрытая";
   let friendsCounter = friends?.length;
 
   const toggleFriendsListActive = () => {
     setIsFriendsListActive((prevState) => !prevState);
   };
+
+  useClickOutside(friendsListRef, () => setIsFriendsListActive(false));
 
   return (
     <Card mode="shadow" className="card">
@@ -44,7 +52,7 @@ export const CardBlock: React.FC<Group> = ({
             <Button onClick={toggleFriendsListActive}>
               Друзей: {friendsCounter}
             </Button>
-            <div className="card__friend-list">
+            <div className="card__friend-list" ref={friendsListRef}>
               {friends && isFriendsListActive && <FriendsList data={friends} />}
             </div>
           </div>

@@ -114,9 +114,11 @@ export const GroupsProvider: React.FC<GroupsProviderProps> = ({ children }) => {
       ),
     ];
 
-    avatarColors.forEach((color: string | any) => {
-      if (!otherColors[color]) {
-        otherColors[color] = color;
+    avatarColors.forEach((color: string | undefined) => {
+      if (color) {
+        if (!otherColors[color]) {
+          otherColors[color] = color;
+        }
       }
     });
 

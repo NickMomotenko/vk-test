@@ -9,7 +9,7 @@ export const filterKey = {
 export const filterByGroup = (data: Group[], filterName: string) => {
   return filterName === "all"
     ? data
-    : data.filter((group: any) => {
+    : data.filter((group: Group) => {
         if (filterName === "close") {
           return group.closed === true;
         }
@@ -23,15 +23,15 @@ export const filterByGroup = (data: Group[], filterName: string) => {
 export const filterByAvatarColors = (data: Group[], filterName: string) => {
   return filterName === "all"
     ? data
-    : data.filter((group: any) => group.avatar_color === filterName);
+    : data.filter((group: Group) => group.avatar_color === filterName);
 };
 
 export const filterByHavingFriends = (data: Group[], filterName: string) => {
   return filterName === "all"
     ? data
-    : data.filter((group: any) => {
+    : data.filter((group: Group) => {
         if (filterName === "has_friends") {
-          return group?.friends && group?.friends !== 0;
+          return group?.friends && group?.friends.length !== 0;
         }
 
         if (filterName === "no_friends") {

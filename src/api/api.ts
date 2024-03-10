@@ -7,6 +7,10 @@ export const getGroups = async (url: string = "") => {
 
     let json: GetGroupsResponse = await res.json();
 
+    if (json.result === 0 || !json.data) {
+      throw new Error("чего то не так...");
+    }
+
     return json;
   } catch (err) {
     let json: GetGroupsResponse = {

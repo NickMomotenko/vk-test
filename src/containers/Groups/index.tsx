@@ -15,16 +15,19 @@ export const Groups = () => {
   const {
     filteredData,
     selectList,
+    selectedFilter,
+    isLoading,
     filter,
     submitFilter,
     resetFilter,
-    selectedFilter,
-    isLoading,
   } = useContext(GroupsContext);
 
   return (
     <div className="groups">
-      <div className="groups__head">
+      <div
+        className="groups__head"
+        style={{ pointerEvents: isLoading ? "none" : "auto" }}
+      >
         <Select
           data={selectList?.group_type}
           labelText="Выбери тип группы"
