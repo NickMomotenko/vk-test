@@ -29,12 +29,14 @@ export const Groups = () => {
         style={{ pointerEvents: isLoading ? "none" : "auto" }}
       >
         <Select
+          id="select-groups"
           data={selectList?.group_type}
           labelText="Выбери тип группы"
           selectedItem={selectedFilter?.group_type}
           onChangeCallback={(key: string) => filter(filterKey.group_type, key)}
         />
         <Select
+          id="select-avatars"
           data={selectList?.avatar_colors}
           labelText="Выбери цвет аватарок"
           selectedItem={selectedFilter.avatar_colors}
@@ -43,6 +45,7 @@ export const Groups = () => {
           }
         />
         <Select
+          id="select-friends"
           data={selectList?.having_friends}
           labelText="Наличие друзей"
           selectedItem={selectedFilter.having_friends}

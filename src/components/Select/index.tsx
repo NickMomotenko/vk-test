@@ -1,6 +1,7 @@
 import { FormItem, NativeSelect } from "@vkontakte/vkui";
 
 type SelectProps = {
+  id: string;
   data: {};
   labelText?: string;
   selectedItem: string | any;
@@ -8,6 +9,7 @@ type SelectProps = {
 };
 
 export const Select: React.FC<SelectProps> = ({
+  id,
   data = {},
   labelText,
   selectedItem,
@@ -19,9 +21,9 @@ export const Select: React.FC<SelectProps> = ({
     onChangeCallback(event.target.value);
 
   return (
-    <FormItem top={labelText} htmlFor="select-id" style={{ padding: `0 16px` }}>
+    <FormItem top={labelText} htmlFor={id} style={{ padding: `0 16px` }}>
       <NativeSelect
-        id="select-id"
+        id={id}
         className="select"
         onChange={handleChange}
         value={selectedItem}
