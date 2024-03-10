@@ -15,7 +15,7 @@ export const CardBlock: React.FC<Group> = ({
   const [isFriendsListActive, setIsFriendsListActive] =
     useState<boolean>(false);
 
-  let isClosedGroup = closed ? "открытая" : "закрытая";
+  let isClosedGroup = !closed ? "открытая" : "закрытая";
   let friendsCounter = friends?.length;
 
   const toggleFriendsListActive = () => {
@@ -33,9 +33,11 @@ export const CardBlock: React.FC<Group> = ({
           />
         </div>
         <div className="card__content">
-          {name && <Title level="1">{name}</Title>}
+          <Title level="1">{name}</Title>
           <Title level="3">Группа {isClosedGroup}</Title>
-          {members_count && <Text weight="1">Подписчики: {members_count}</Text>}
+          {members_count !== 0 && (
+            <Text weight="1">Подписчики: {members_count}</Text>
+          )}
         </div>
         {friends && (
           <div className="card__friend">

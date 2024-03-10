@@ -3,7 +3,7 @@ import { FormItem, NativeSelect } from "@vkontakte/vkui";
 type SelectProps = {
   data: {};
   labelText?: string;
-  selectedItem: string | undefined;
+  selectedItem: string | any;
   onChangeCallback: (key: string) => void;
 };
 

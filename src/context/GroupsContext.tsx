@@ -1,11 +1,20 @@
 import React, { createContext, ReactNode, useEffect, useState } from "react";
+
 import { Group } from "../types/types";
+
 import { getGroups } from "../api/api";
+
 import { debounce } from "../helpers/debounce";
+import {
+  filterByAvatarColors,
+  filterByGroup,
+  filterByHavingFriends,
+} from "../helpers/filter";
 
 interface GroupsContextProps {
   groups: Group[];
   filteredData: Group[];
+  isLoading: boolean;
   selectList: {
     avatar_colors: {};
     group_type: {};
@@ -28,6 +37,7 @@ interface GroupsProviderProps {
 export const GroupsContext = createContext<GroupsContextProps>({
   groups: [],
   filteredData: [],
+  isLoading: false,
   selectList: {
     avatar_colors: {},
     group_type: {},
@@ -45,6 +55,7 @@ export const GroupsContext = createContext<GroupsContextProps>({
 
 export const GroupsProvider: React.FC<GroupsProviderProps> = ({ children }) => {
   const [groups, setGroups] = useState<Group[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [selectList, setSelectList] = useState({
     avatar_colors: {
@@ -71,12 +82,30 @@ export const GroupsProvider: React.FC<GroupsProviderProps> = ({ children }) => {
   const [filteredData, setFilteredData] = useState<Group[]>([]);
 
   useEffect(() => {
-    debounce(() => getGroups().then(({ data }: any) => setGroups(data)));
-    // getGroups().then(({ data }: any) => setGroups(data));
+    setIsLoading(true);
+    debounce(() =>
+      getGroups().then(({ data }) => {
+        if (data) {
+          setGroups(data);
+          setIsLoading(false);
+        }
+      })
+    );
   }, []);
 
   useEffect(() => {
-    let obj = {};
+    setSelectList((prevState: any) => {
+      return {
+        ...prevState,
+        avatar_colors: { ...prevState.avatar_colors, ...getAllColors() },
+      };
+    });
+
+    setFilteredData(groups);
+  }, [groups]);
+
+  const getAllColors = () => {
+    let otherColors: { [key: string]: string } = {};
     let avatarColors = [
       ...new Set(
         groups
@@ -85,55 +114,30 @@ export const GroupsProvider: React.FC<GroupsProviderProps> = ({ children }) => {
       ),
     ];
 
-    avatarColors.forEach((color: string | undefined) => {
-      if (!obj[color]) {
-        obj[color] = color;
+    avatarColors.forEach((color: string | any) => {
+      if (!otherColors[color]) {
+        otherColors[color] = color;
       }
     });
 
-    setSelectList((prevState: any) => {
-      return {
-        ...prevState,
-        avatar_colors: { ...prevState.avatar_colors, ...obj },
-      };
-    });
-
-    setFilteredData(groups);
-  }, [groups]);
+    return otherColors;
+  };
 
   const submitFilter = () => {
-    let filteredByTypeOfGroup =
-      selectedFilter.group_type === "all"
-        ? groups
-        : groups.filter((group: any) => {
-            if (selectedFilter.group_type === "close") {
-              return group.closed === true;
-            }
+    let filteredByTypeOfGroup = filterByGroup(
+      groups,
+      selectedFilter.group_type
+    );
 
-            if (selectedFilter.group_type === "open") {
-              return group.closed === false;
-            }
-          });
+    let filteredByAvatarColors = filterByAvatarColors(
+      filteredByTypeOfGroup,
+      selectedFilter.avatar_colors
+    );
 
-    let filteredByAvatarColors =
-      selectedFilter.avatar_colors === "all"
-        ? filteredByTypeOfGroup
-        : filteredByTypeOfGroup.filter(
-            (group: any) => group.avatar_color === selectedFilter.avatar_colors
-          );
-
-    let filteredByHavingFriends =
-      selectedFilter.having_friends === "all"
-        ? filteredByAvatarColors
-        : filteredByAvatarColors.filter((group: any) => {
-            if (selectedFilter.having_friends === "has_friends") {
-              return group?.friends && group?.friends !== 0;
-            }
-
-            if (selectedFilter.having_friends === "no_friends") {
-              return !group?.friends || group?.friends.length === 0;
-            }
-          });
+    let filteredByHavingFriends = filterByHavingFriends(
+      filteredByAvatarColors,
+      selectedFilter.having_friends
+    );
 
     setFilteredData(filteredByHavingFriends);
   };
@@ -170,6 +174,7 @@ export const GroupsProvider: React.FC<GroupsProviderProps> = ({ children }) => {
         filteredData,
         resetFilter,
         selectedFilter,
+        isLoading,
       }}
     >
       {children}
