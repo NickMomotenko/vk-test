@@ -8,11 +8,11 @@ export const getGroups = async (url: string = "") => {
     let json: GetGroupsResponse = await res.json();
 
     return json;
-  } catch (_) {
-    let json: any = {};
-
-    json.result = 1;
-    json.data = groups;
+  } catch (err) {
+    let json: GetGroupsResponse = {
+      result: 1,
+      data: groups,
+    };
 
     return json;
   }
